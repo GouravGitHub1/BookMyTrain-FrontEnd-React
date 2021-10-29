@@ -9,8 +9,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 export const BookTicket = ({ setSubmitRespnse }: { setSubmitRespnse: any }) => {
 	const [name, setName] = useState('');
-	const [ticket, setTicket] = useState(1);
-	const [amount, setAmount] = useState(120);
+	const [ticket, setTicket] = useState(0);
+	const [amount, setAmount] = useState(0);
 	const [loading, setLoading] = useState(false);
 	const history = useHistory();
 
@@ -22,7 +22,7 @@ export const BookTicket = ({ setSubmitRespnse }: { setSubmitRespnse: any }) => {
 	);
 
 	const handleTicketChange = useCallback((event) => {
-		if (event.target.value < 1) setTicket(1);
+		if (event.target.value < 0) setTicket(0);
 		else if (event.target.value > 7) setTicket(7);
 		else {
 			setTicket(event.target.value);
@@ -31,6 +31,10 @@ export const BookTicket = ({ setSubmitRespnse }: { setSubmitRespnse: any }) => {
 	}, []);
 
 	const handleSubmit = useCallback(() => {
+		if (ticket === 0) {
+			alert('enter number of ticket greater than 0');
+			return;
+		}
 		setLoading(true);
 		axios
 			.post('https://bookmytrainspringmongo.herokuapp.com/api/bookseat/', {
