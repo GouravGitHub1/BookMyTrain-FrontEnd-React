@@ -9,8 +9,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 export const BookTicket = ({ setSubmitRespnse }: { setSubmitRespnse: any }) => {
 	const [name, setName] = useState('');
-	const [ticket, setTicket] = useState(0);
-	const [amount, setAmount] = useState(0);
+	const [ticket, setTicket] = useState(1);
+	const [amount, setAmount] = useState(120);
 	const [loading, setLoading] = useState(false);
 	const history = useHistory();
 
@@ -22,14 +22,14 @@ export const BookTicket = ({ setSubmitRespnse }: { setSubmitRespnse: any }) => {
 	);
 
 	const handleTicketChange = useCallback((event) => {
-		if (event.target.value < 0) setTicket(1);
+		if (event.target.value < 1) setTicket(1);
 		else if (event.target.value > 7) setTicket(7);
 		else {
 			setTicket(event.target.value);
 			setAmount(event.target.value * 120);
 		}
 	}, []);
-	console.log(loading);
+
 	const handleSubmit = useCallback(() => {
 		setLoading(true);
 		axios
