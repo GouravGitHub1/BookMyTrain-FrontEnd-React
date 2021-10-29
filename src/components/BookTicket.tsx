@@ -47,7 +47,10 @@ export const BookTicket = ({ setSubmitRespnse }: { setSubmitRespnse: any }) => {
 				history.push('/availableTicket');
 			})
 			.catch((error) => {
-				alert(error);
+				if (error.response) {
+					alert(error.response.status + ' ' + error.response.data.message);
+					setLoading(false);
+				}
 			});
 	}, [history, name, setSubmitRespnse, ticket]);
 	return (
