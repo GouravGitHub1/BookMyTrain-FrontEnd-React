@@ -9,7 +9,7 @@ import axios from 'axios';
 export const FindSeat = () => {
 	const [pnr, setPnr] = useState('');
 	const [showDetail, setShowDetail] = useState(false);
-	const [apiResponse, setApiResponse] = useState([]);
+	const [apiResponse, setApiResponse] = useState<any>();
 	const [loading, setLoading] = useState(false);
 	const handleChange = useCallback(
 		(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,48 +17,61 @@ export const FindSeat = () => {
 		},
 		[]
 	);
-	let userName = '';
-	let date = '';
+
 	const details = useMemo(() => {
 		return (
 			<Container sx={{ my: 10 }}>
 				<Stack direction='row' justifyContent='center' spacing={1}>
 					<Typography variant='h6'>Seat Numbers:</Typography>
-					{apiResponse.map((item: any) => {
-						// eslint-disable-next-line react-hooks/exhaustive-deps
-						userName = item.bookedUser;
-						// eslint-disable-next-line react-hooks/exhaustive-deps
-						date = item.bookingDate;
-						return (
+					{apiResponse
+						? apiResponse.map((item: any) => {
+								return (
+									<Typography
+										variant='h6'
+										style={{ color: 'blue' }}
+										key={item._id}
+									>
+										{item.seatNumber}
+									</Typography>
+								);
+						  })
+						: undefined}
+				</Stack>
+				{apiResponse ? (
+					<>
+						<Stack direction='row' justifyContent='center' spacing={2}>
+							<Typography variant='h6'>User Name:</Typography>
 							<Typography variant='h6' style={{ color: 'blue' }}>
-								{item.seatNumber}
+								{apiResponse[0].bookedUser}
 							</Typography>
-						);
-					})}
-				</Stack>
-				<Stack direction='row' justifyContent='center' spacing={2}>
-					<Typography variant='h6'>User Name:</Typography>
-					<Typography variant='h6' style={{ color: 'blue' }}>
-						{userName}
-					</Typography>
-				</Stack>
-				<Stack direction='row' justifyContent='center' spacing={2}>
-					<Typography variant='h6'>Booking Date:</Typography>
-					<Typography variant='h6' style={{ color: 'blue' }}>
-						{date.substring(0, 10)}
-					</Typography>
-				</Stack>
+						</Stack>
+						<Stack direction='row' justifyContent='center' spacing={2}>
+							<Typography variant='h6'>Booking Date:</Typography>
+							<Typography variant='h6' style={{ color: 'blue' }}>
+								{apiResponse[0].bookingDate.substring(0, 10)}
+							</Typography>
+						</Stack>
+					</>
+				) : (
+					<></>
+				)}
 			</Container>
 		);
 	}, [apiResponse]);
+
 	const handleSubmit = useCallback(() => {
+		if (pnr === '') {
+			alert('enter PNR');
+
+			return;
+		}
 		setLoading(true);
+
 		axios
 			.get(
 				`https://bookmytrainspringmongo.herokuapp.com/api/bookingdata/${pnr}`
 			)
 			.then((response) => {
-				console.log(response);
 				if (response.data.length < 1) {
 					alert('Invalid PNR');
 					setShowDetail(false);
@@ -69,7 +82,6 @@ export const FindSeat = () => {
 				setLoading(false);
 			})
 			.catch((error) => {
-				console.log(error);
 				alert(error);
 			});
 		setShowDetail(true);
