@@ -31,7 +31,7 @@ export const BookTicket = ({ setSubmitRespnse }: { setSubmitRespnse: any }) => {
 	}, []);
 
 	const handleSubmit = useCallback(() => {
-		if (ticket === 0) {
+		if (ticket < 1) {
 			alert('enter number of ticket greater than 0');
 			return;
 		}
